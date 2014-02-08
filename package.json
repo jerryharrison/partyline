@@ -1,0 +1,24 @@
+{
+  "name": "partyline",
+  "version": "0.0.1",
+  "description": "Group email made easy",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jerryharrison/partyline.git"
+  },
+  "author": "Jerry Harrison | Indie Ventures, LLC",
+  "license": "AGPL",
+  "bugs": {
+    "url": "https://github.com/jerryharrison/partyline/issues"
+  },
+  "homepage": "https://github.com/jerryharrison/partyline",
+  "dependencies": {
+    "express": "~3.4.8",
+    "simplesmtp": "*",
+    "mailparser": "*"
+  }
+}
