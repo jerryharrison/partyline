@@ -1,7 +1,7 @@
 
 // var express = require('express');
 var config = require("./config.json");
-var smtp = require("simplesmtp");
+var simplesmtp = require("simplesmtp");
 var MailParser = require("mailparser").MailParser,
     mailparser = new MailParser();
 
@@ -12,7 +12,8 @@ var partylines = {
   bni: [{email: 'fivesecondrule@gmail.com', name: 'Jery Harrison', type: 'to'}, {email: 'fivesecondrule@gmail.com', name: 'Jery Luna', type: 'to'}]
 }
 
-smtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: true});
+var smtp = simplesmtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: true});
+
 smtp.listen(25, function(err){
   if(!err){
     console.log("SMTP server listening on port 25");
