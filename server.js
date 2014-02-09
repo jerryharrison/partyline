@@ -1,14 +1,26 @@
 
 // var express = require('express');
 var smtp = require("simplesmtp");
+var MailParser = require("mailparser").MailParser,
+    mailparser = new MailParser([options]);
 // var fs = require("fs");
 
 smtp.createSimpleServer({SMTPBanner:"My Server", debug: true}, function(req){
     process.stdout.write("\r\nNew Mail:\r\n");
     req.on("data", function(chunk){
-        process.stdout.write(chunk);
+      // process.stdout.write(chunk);
+      mailparser.write(chunk);
+      mailparser.end();
+
+      mailparser.on('end', function(mail){
+        console.log("From:",      mail.from); //[{address:'sender@example.com',name:'Sender Name'}]
+        console.log("Subject:",   mail.subject); // Hello world!
+        console.log("Text body:", mail.text); // How are you today?
+      });
     });
-    req.accept();
+    
+    req.accept(); // close req
+
 }).listen(25, function(err){
     if(!err){
         console.log("SMTP server listening on port 25");
