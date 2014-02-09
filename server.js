@@ -27,21 +27,24 @@ var partylines = {
 var smtp = simplesmtp.createServer();
     smtp.listen(25);
 
-smtp.on('validateRecipient', function(connection, email, done){
-  var partyline = ((email || "").split("@").end() || "").toLowerCase().trim();
+// smtp.on('validateRecipient', function(connection, email, done){
+//   var partyline = ((email || "").split("@").end() || "").toLowerCase().trim();
 
-  console.log('Partyline:', partyline);
-  console.log('Partylines:', partylines);
+//   console.log('Partyline:', partyline);
+//   console.log('Partylines:', partylines);
 
-  if (partylines[partyline]) {
-    connection.partyline = partyline;
-    connection.partylineRecipients = partylines[partyline];
-    return done();
-  } else {
-    return done(new Error("Invalid Partyline"));
-  }
+//   if (partylines[partyline]) {
+//     connection.partyline = partyline;
+//     connection.partylineRecipients = partylines[partyline];
+//     return done();
+//   } else {
+//     return done(new Error("Invalid Partyline"));
+//   }
+// });
+
+smtp.on("data", function(chunk){
+  process.stdout.write(chunk);
 });
-
 /*
 smtp.on('validateSender', function(connection, email, done){
   return done();
