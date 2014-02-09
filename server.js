@@ -1,22 +1,27 @@
 
 // var express = require('express');
-var simplesmtp = require("simplesmtp");
+var smtp = require("simplesmtp");
 // var fs = require("fs");
 
-var smtp = simplesmtp.createServer();
-    smtp.listen(25);
-
-smtp.on("startData", function(connection){
-    console.log("Message from:", connection.from);
-    console.log("Message to:", connection.to);
-    // connection.saveStream = fs.createWriteStream("/tmp/message.txt");
+smtp.createSimpleServer({SMTPBanner:"My Server", debug: true}, function(req){
+    process.stdout.write("\r\nNew Mail:\r\n");
+    req.on("data", function(chunk){
+        process.stdout.write(chunk);
+    });
+    req.accept();
+}).listen(25, function(err){
+    if(!err){
+        console.log("SMTP server listening on port 25");
+    }else{
+        console.log("Could not start server on port 25. Ports under 1000 require root privileges.");
+        console.log(err.message);
+    }
 });
-
 
 var http = require('http');
 http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Hello World\n');
+  res.end('Welcome to Partyline! Join for free simply email us at signup@partyline.cc with the participants as the CC and we\'ll setup the forward.');
 }).listen(80);
 console.log('Server running at http://127.0.0.1:1337/');
 
