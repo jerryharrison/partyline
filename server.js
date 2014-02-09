@@ -39,6 +39,7 @@ smtp.on('validateRecipient', function(connection, email, done){
   }
 });
 
+/*
 smtp.on('validateSender', function(connection, email, done){
   return done();
 });
@@ -103,7 +104,7 @@ smtp.on('end', function(connection){
   });
 
 });
-
+*/
 
 
 
