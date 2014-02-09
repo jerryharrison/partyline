@@ -33,8 +33,9 @@ var smtp = simplesmtp.createServer({
     smtp.listen(25);
 
 smtp.on('validateRecipient', function(envelope, email, done){
-  var partyline = ((email || "").split("@").end() || "").toLowerCase().trim();
+  // var partyline = ((email || "").split("@").end() || "").toLowerCase().trim();
 
+  console.log(((email || "").split("@"));
   console.log('Partyline:', partyline);
   console.log('Partylines:', partylines);
 
