@@ -12,15 +12,15 @@ var partylines = {
   bni: [{email: 'fivesecondrule@gmail.com', name: 'Jery Harrison', type: 'to'}, {email: 'fivesecondrule@gmail.com', name: 'Jery Luna', type: 'to'}]
 }
 
-smtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: true})
-    .listen(25, function(err){
-        if(!err){
-          console.log("SMTP server listening on port 25");
-        }else{
-          console.log("Could not start server on port 25. Ports under 1000 require root privileges.");
-          console.log(err.message);
-        }
-    });
+smtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: true});
+smtp.listen(25, function(err){
+  if(!err){
+    console.log("SMTP server listening on port 25");
+  }else{
+    console.log("Could not start server on port 25. Ports under 1000 require root privileges.");
+    console.log(err.message);
+  }
+});
 
 smtp.on('validateRecipient', function(connection, email, done){
   var partyline = ((email || "").split("@").end() || "").toLowerCase().trim();
