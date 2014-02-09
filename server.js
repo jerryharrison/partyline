@@ -28,6 +28,8 @@ var smtp = simplesmtp.createServer();
 smtp.on('validateRecipient', function(connection, email, done){
   var partyline = ((email || "").split("@").end() || "").toLowerCase().trim();
 
+  console.log('Partyline', partyline);
+
   if (partylines[partyline]) {
     connection.partyline = partyline;
     connection.partylineRecipients = partylines[partyline];
@@ -59,7 +61,7 @@ smtp.on("data", function(connection, chunk){
 
 });
 
-smtp.on('close', function(connection){
+smtp.on('end', function(connection){
   
   var email;
   // Loop over all the partyline recipients for this partyline
