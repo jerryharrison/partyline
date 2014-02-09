@@ -91,6 +91,8 @@ smtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: false}, function(
 
   });
 
+  req.accept();
+
 }).listen(25, function(err){
   if(!err){
     console.log("SMTP server listening on port 25");
