@@ -24,7 +24,7 @@ var partylines = {
 //   }
 // });
 
-var smtp = simplesmtp.createServer();
+var smtp = simplesmtp.createServer({debug: true});
     smtp.listen(25);
 
 // smtp.on('validateRecipient', function(connection, email, done){
