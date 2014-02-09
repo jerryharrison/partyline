@@ -15,41 +15,6 @@ var partylines = {
   ]
 };
 
-simplesmtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: true}, function(req){
-
-  // process.stdout.write("\r\nNew Mail:\r\n");
-
-  req.on("data", function(connection, chunk){
-    console.log(connection);
-    // process.stdout.write(chunk);
-  });
-
-  req.on('validateRecipient', function(connection, email, done){
-    var partyline = ((email || "").split("@").end() || "").toLowerCase().trim();
-
-    console.log('Partyline:', partyline);
-    console.log('Partylines:', partylines);
-
-    if (partylines[partyline]) {
-      connection.partyline = partyline;
-      connection.partylineRecipients = partylines[partyline];
-      return done();
-    } else {
-      return done(new Error("Invalid Partyline"));
-    }
-  });
-
-  req.accept();
-
-}).listen(25, function(err){
-    if(!err){
-        console.log("SMTP server listening on port 25");
-    }else{
-        console.log("Could not start server on port 25. Ports under 1000 require root privileges.");
-        console.log(err.message);
-    }
-});
-
 // smtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: false}).listen(25, function(err){
 //   if(!err){
 //     console.log("SMTP server listening on port 25");
@@ -59,28 +24,27 @@ simplesmtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: true}, func
 //   }
 // });
 
-// var smtp = simplesmtp.createServer({debug: true});
-    // smtp.listen(25);
+var smtp = simplesmtp.createServer({
+    name: 'partyline.cc',
+    validateRecipients : true,
+    debug: true
+});
+    smtp.listen(25);
 
-// smtp.on('validateRecipient', function(connection, email, done){
-//   var partyline = ((email || "").split("@").end() || "").toLowerCase().trim();
+smtp.on('validateRecipient', function(envelope, email, done){
+  var partyline = ((email || "").split("@").end() || "").toLowerCase().trim();
 
-//   console.log('Partyline:', partyline);
-//   console.log('Partylines:', partylines);
+  console.log('Partyline:', partyline);
+  console.log('Partylines:', partylines);
 
-//   if (partylines[partyline]) {
-//     connection.partyline = partyline;
-//     connection.partylineRecipients = partylines[partyline];
-//     return done();
-//   } else {
-//     return done(new Error("Invalid Partyline"));
-//   }
-// });
-
-// smtp.on("data", function(chunk){
-  // process.stdout.write(chunk);
-// });
-
+  if (partylines[partyline]) {
+    envelope.partyline = partyline;
+    envelope.partylineRecipients = partylines[partyline];
+    return done();
+  } else {
+    return done(new Error("Invalid Partyline"));
+  }
+});
 
 /*
 smtp.on('validateSender', function(connection, email, done){
