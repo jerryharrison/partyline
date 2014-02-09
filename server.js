@@ -1,7 +1,7 @@
 
-var express = require('express');
+// var express = require('express');
 var simplesmtp = require("simplesmtp");
-var fs = require("fs");
+// var fs = require("fs");
 
 var smtp = simplesmtp.createServer().listen(25);
 
