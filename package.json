@@ -19,6 +19,7 @@
   "dependencies": {
     "express": "~3.4.8",
     "simplesmtp": "*",
-    "mailparser": "*"
+    "mailparser": "*",
+    "mandrill-api": "~1.0.39"
   }
 }
