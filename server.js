@@ -15,7 +15,14 @@ var partylines = {
   ]
 };
 
-simplesmtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: false}, function(req){
+simplesmtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: true}, function(req){
+
+  // process.stdout.write("\r\nNew Mail:\r\n");
+
+  req.on("data", function(connection, chunk){
+    console.log(connection);
+    // process.stdout.write(chunk);
+  });
 
   req.on('validateRecipient', function(connection, email, done){
     var partyline = ((email || "").split("@").end() || "").toLowerCase().trim();
@@ -33,7 +40,7 @@ simplesmtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: false}, fun
   });
 
   req.accept();
-  
+
 }).listen(25, function(err){
     if(!err){
         console.log("SMTP server listening on port 25");
