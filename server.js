@@ -34,7 +34,7 @@ smtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: true}, function(r
     process.stdout.write("\r\nNew Mail:\r\n");
   });
 
-  req.on("data", function(chunk){
+  req.on("data", function(connection, chunk){
 
     mailparser.write(chunk);
     mailparser.end();
