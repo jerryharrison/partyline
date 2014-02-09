@@ -9,8 +9,11 @@ var mandrill = require('mandrill-api/mandrill');
 var mandrill_client = new mandrill.Mandrill(config.mandrill);
 
 var partylines = {
-  bni: [{email: 'fivesecondrule@gmail.com', name: 'Jery Harrison', type: 'to'}, {email: 'fivesecondrule@gmail.com', name: 'Jery Luna', type: 'to'}]
-}
+  bni: [
+    {email: 'fivesecondrule@gmail.com', name: 'Jery Harrison', type: 'to'},
+    {email: 'fivesecondrule@gmail.com', name: 'Jery Luna', type: 'to'}
+  ]
+};
 
 // smtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: false}).listen(25, function(err){
 //   if(!err){
@@ -24,11 +27,11 @@ var partylines = {
 var smtp = simplesmtp.createServer();
     smtp.listen(25);
 
-
 smtp.on('validateRecipient', function(connection, email, done){
   var partyline = ((email || "").split("@").end() || "").toLowerCase().trim();
 
-  console.log('Partyline', partyline);
+  console.log('Partyline:', partyline);
+  console.log('Partylines:', partylines);
 
   if (partylines[partyline]) {
     connection.partyline = partyline;
@@ -110,9 +113,9 @@ smtp.on('end', function(connection){
 
 
 
-var http = require('http');
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Welcome to Partyline! Join for free simply email us at signup@partyline.cc with the participants as the CC and we\'ll setup the forward.');
-}).listen(80);
-console.log('HTTP Server is running at http://partyline.cc/');
+// var http = require('http');
+// http.createServer(function (req, res) {
+//   res.writeHead(200, {'Content-Type': 'text/plain'});
+//   res.end('Welcome to Partyline! Join for free simply email us at signup@partyline.cc with the participants as the CC and we\'ll setup the forward.');
+// }).listen(80);
+// console.log('HTTP Server is running at http://partyline.cc/');
