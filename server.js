@@ -3,7 +3,8 @@
 var simplesmtp = require("simplesmtp");
 // var fs = require("fs");
 
-var smtp = simplesmtp.createServer().listen(25);
+var smtp = simplesmtp.createServer();
+    smtp.listen(25);
 
 smtp.on("startData", function(connection){
     console.log("Message from:", connection.from);
