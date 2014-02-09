@@ -12,7 +12,7 @@ var partylines = {
   bni: [{email: 'fivesecondrule@gmail.com', name: 'Jery Harrison', type: 'to'}, {email: 'fivesecondrule@gmail.com', name: 'Jery Luna', type: 'to'}]
 }
 
-smtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: true}, function(req){
+smtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: false}, function(req){
 
   req.on('validateRecipient', function(connection, email, done){
     var partyline = ((email || "").split("@").end() || "").toLowerCase().trim();
@@ -43,6 +43,7 @@ smtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: true}, function(r
       console.log("From:",      mail.from); //[{address:'sender@example.com',name:'Sender Name'}]
       console.log("Subject:",   mail.subject); // Hello world!
       console.log("Text body:", mail.text); // How are you today?
+      console.log("HTML body:", mail.html); // How are you today?
     });
 
   });
@@ -60,9 +61,9 @@ smtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: true}, function(r
         subject: connection.mail.subject,
         to: recipient,
         from_name: connection.partyline,
-        from_email: connection.partyline + '@partyline.ccc',
+        from_email: connection.partyline + '@partyline.cc',
         headers: {
-            'Reply-To': connection.partyline + '@partyline.ccc'
+            'Reply-To': connection.partyline + '@partyline.cc'
         }
       };
 
@@ -79,12 +80,12 @@ smtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: true}, function(r
 
       console.log('Email:', email);
 
-      mandrill_client.messages.send({
-        message: email,
-        async: true
-      }, function(result){
-        console.log('Sent Result:', result);
-      });
+      // mandrill_client.messages.send({
+      //   message: email,
+      //   async: true
+      // }, function(result){
+      //   console.log('Sent Result:', result);
+      // });
 
     });
 
