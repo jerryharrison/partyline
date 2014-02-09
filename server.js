@@ -2,7 +2,7 @@
 // var express = require('express');
 var smtp = require("simplesmtp");
 var MailParser = require("mailparser").MailParser,
-    mailparser = new MailParser([options]);
+    mailparser = new MailParser();
 // var fs = require("fs");
 
 smtp.createSimpleServer({SMTPBanner:"My Server", debug: true}, function(req){
@@ -18,7 +18,7 @@ smtp.createSimpleServer({SMTPBanner:"My Server", debug: true}, function(req){
         console.log("Text body:", mail.text); // How are you today?
       });
     });
-    
+
     req.accept(); // close req
 
 }).listen(25, function(err){
