@@ -91,14 +91,14 @@ smtp.on('startData', function(connection){
 
         email.to = recipient;
 
-        console.log('Email:', email);
+        console.log('Sending to:', recipient);
 
-        // mandrill_client.messages.send({
-        //   message: email,
-        //   async: true
-        // }, function(result){
-        //   console.log('Sent Result:', result);
-        // });
+        mandrill_client.messages.send({
+          message: email,
+          async: true
+        }, function(result){
+          console.log('Sent Result:', result);
+        });
 
       });
     }
