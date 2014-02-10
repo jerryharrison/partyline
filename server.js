@@ -26,7 +26,7 @@ var partylines = {
 
 var smtp = simplesmtp.createServer({
     name: 'partyline.cc',
-    validateRecipients : true,
+    validateRecipients : false,
     disableDNSValidation: true,
     debug: true
 });
