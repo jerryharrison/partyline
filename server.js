@@ -25,7 +25,7 @@ var smtp = simplesmtp.createServer({
 smtp.listen(25);
 
 smtp.on('validateRecipient', function(connection, email, done){
-  console.log('validateRecipient');
+  console.log('validateRecipient', connection);
   email = email.split("@");
   var partyline = {};
       partyline.name = email[0].toLowerCase().trim();
@@ -42,19 +42,19 @@ smtp.on('validateRecipient', function(connection, email, done){
 
 
 smtp.on('validateSender', function(connection, email, done){
-  console.log('validateSender');
+  console.log('validateSender', connection);
   return done();
 });
 
 
 smtp.on("startData", function(connection){
-  connection.test = 'data';
+  console.log('startData',connection);
   process.stdout.write("\r\nReading New Mail...\r\n");
 });
 
 smtp.on("data", function(connection, chunk){
-  connection.reading = 'data';
-  console.log('Reading Data..');
+  console.log('Reading Data..',connection);
+  
   mailparser.write(chunk);
   mailparser.end();
   mailparser.on('end', function(mail){
@@ -68,50 +68,55 @@ smtp.on("data", function(connection, chunk){
 
 });
 
+smtp.on('dataReady', function(connection){
+  console.log('dataReady',connection);
+});
+
+
 smtp.on('close', function(connection){
   
-  console.log('message event...')
-  console.log(connection);
-  console.log(connection.partyline);
+  console.log('close event...', connection);
 
   var email;
   // Loop over all the partyline recipients for this partyline
   // And send them all individual emails with the from being the partyline email
-  connection.partyline.recipients.forEach(function(recipient){
+  if (connection.partyline.recipients) {
+    connection.partyline.recipients.forEach(function(recipient){
 
-    email = {
-      html: connection.parsedMail.html,
-      text: connection.parsedMail.text,
-      subject: connection.parsedMail.subject,
-      to: recipient,
-      from_name: connection.partyline,
-      from_email: connection.partyline.name + '@partyline.cc',
-      headers: {
-        'Reply-To': connection.partyline.name + '@partyline.cc'
+      email = {
+        html: connection.parsedMail.html,
+        text: connection.parsedMail.text,
+        subject: connection.parsedMail.subject,
+        to: recipient,
+        from_name: connection.partyline,
+        from_email: connection.partyline.name + '@partyline.cc',
+        headers: {
+          'Reply-To': connection.partyline.name + '@partyline.cc'
+        }
+      };
+
+      if (connection.parsedMail.attachments && connection.parsedMail.attachments.length > 0) {
+        email.attachments = [];
+        for (var i = connection.parsedMail.attachments.length - 1; i >= 0; i--) {
+          email.attachments.push({
+            type: connection.parsedMail.attachments[i].contentType,
+            name: connection.parsedMail.attachments[i].fileName,
+            content: connection.parsedMail.attachments[i].content
+          });
+        }
       }
-    };
 
-    if (connection.parsedMail.attachments && connection.parsedMail.attachments.length > 0) {
-      email.attachments = [];
-      for (var i = connection.parsedMail.attachments.length - 1; i >= 0; i--) {
-        email.attachments.push({
-          type: connection.parsedMail.attachments[i].contentType,
-          name: connection.parsedMail.attachments[i].fileName,
-          content: connection.parsedMail.attachments[i].content
-        });
-      }
-    }
+      console.log('Email:', email);
 
-    console.log('Email:', email);
+      // mandrill_client.messages.send({
+      //   message: email,
+      //   async: true
+      // }, function(result){
+      //   console.log('Sent Result:', result);
+      // });
 
-    // mandrill_client.messages.send({
-    //   message: email,
-    //   async: true
-    // }, function(result){
-    //   console.log('Sent Result:', result);
-    // });
-
-  });
+    });
+  }
 
 });
 
