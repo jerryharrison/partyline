@@ -89,29 +89,23 @@ smtp.on('startData', function(connection){
     // And send them all individual emails with the from being the partyline email
     if (connection.partyline && connection.partyline.recipients) {
 
-      // email.to = connection.partyline.recipients;
-
-      // mandrill_client.messages.send({
-      //   message: email,
-      //   async: true
-      // }, function(result){
-      //   console.log('Sent Result:', result);
-      // });
-
       connection.partyline.recipients.forEach(function(recipient){
 
-        email.to = [recipient];
+        if (recipient.email !== connection.from) {
 
-        console.log('Sending to:', recipient.name);
+          email.to = [recipient];
 
-        mandrill_client.messages.send({
-          message: email,
-          async: true
-        }, function(result){
-          console.log('Sent Result:', result);
-        });
+          mandrill_client.messages.send({
+            message: email,
+            async: true
+          }, function(result){
+            console.log('Sent Result:', result.email, result.status);
+          });
+
+        };
 
       });
+
     }
 
   });
