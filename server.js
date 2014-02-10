@@ -21,6 +21,15 @@ var smtp = simplesmtp.createServer({
   validateRecipients : false,
   disableDNSValidation: true,
   debug: true
+}, function(req){
+
+  req.on("data", function(chunk){
+    mailparser.write(chunk);
+    mailparser.end();
+  });
+
+  req.accept();
+
 });
 smtp.listen(25);
 
@@ -35,6 +44,9 @@ On dataReady pipe file to mailparser...
 
 */
 
+mailparser.on("end", function(mail_object){
+    console.log("Subject:", mail_object.subject);
+});
 
 smtp.on('validateRecipient', function(connection, email, done){
   console.log('validateRecipient');
