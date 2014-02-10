@@ -15,24 +15,23 @@ var partylines = {
   ]
 };
 
-// smtp.createSimpleServer({SMTPBanner:"Partyline Server", debug: false}).listen(25, function(err){
-//   if(!err){
-//     console.log("SMTP server listening on port 25");
-//   }else{
-//     console.log("Could not start server on port 25. Ports under 1000 require root privileges.");
-//     console.log(err.message);
-//   }
-// });
-
 var smtp = simplesmtp.createServer({
-    name: 'partyline.cc',
-    validateRecipients : false,
-    disableDNSValidation: true,
-    debug: true
+  SMTPBanner:"Partyline Server", 
+  name: 'partyline.cc',
+  validateRecipients : false,
+  disableDNSValidation: true,
+  debug: true
 });
     smtp.listen(25);
 
+
+smtp.on('rcptFailed', function(addresses){
+  console.log('Failed Addresses:', addresses);
+});
+
+
 smtp.on('validateRecipient', function(connection, email, done){
+  console.log('validateRecipient');
   email = (email || "").split("@");
   var partyline = {};
       partyline.name = email.pop().toLowerCase().trim();
@@ -47,11 +46,12 @@ smtp.on('validateRecipient', function(connection, email, done){
   }
 });
 
-/*
+
 smtp.on('validateSender', function(connection, email, done){
+  console.log('validateSender');
   return done();
 });
-*/
+
 
 smtp.on("startData", function(connection){
   process.stdout.write("\r\nNew Mail:\r\n");
