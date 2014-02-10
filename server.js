@@ -32,11 +32,13 @@ smtp.on('rcptFailed', function(addresses){
 
 smtp.on('validateRecipient', function(connection, email, done){
   console.log('validateRecipient');
-  email = (email || "").split("@");
+  email = email.split("@");
   var partyline = {};
       partyline.name = email.pop().toLowerCase().trim();
       partyline.host = email.slice(-1)[0].toLowerCase().trim();
 
+  console.log(email);
+  console.log(partyline);
   console.log(partyline.name);
   console.log(partylines[partyline.name]);
   console.log((partylines[partyline.name]));
