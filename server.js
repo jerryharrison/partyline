@@ -20,7 +20,7 @@ var smtp = simplesmtp.createServer({
   name: 'partyline.cc',
   validateRecipients : false,
   disableDNSValidation: true,
-  debug: false
+  debug: true
 });
 smtp.listen(25);
 
@@ -37,7 +37,7 @@ On dataReady pipe file to mailparser...
 
 
 smtp.on('validateRecipient', function(connection, email, done){
-  console.log('validateRecipient', connection);
+  console.log('validateRecipient');
   email = email.split("@");
   var partyline = {};
       partyline.name = email[0].toLowerCase().trim();
@@ -54,7 +54,7 @@ smtp.on('validateRecipient', function(connection, email, done){
 
 
 smtp.on('validateSender', function(connection, email, done){
-  console.log('validateSender', connection);
+  console.log('validateSender');
   return done();
 });
 
@@ -69,9 +69,7 @@ smtp.on("startData", function(connection){
 
 smtp.on("data", function(connection, chunk){
   console.log('Reading Data..');
-
   connection.emailData += chunk;
-
 });
 
 smtp.on('dataReady', function(connection, done){
@@ -85,7 +83,7 @@ smtp.on('dataReady', function(connection, done){
 
 smtp.on('close', function(connection){
   
-  console.log('close event...', connection);
+  console.log('close event...');
 
   mailparser.write(connection.emailData);
   mailparser.end();
