@@ -24,24 +24,11 @@ var smtp = simplesmtp.createServer({
 });
     smtp.listen(25);
 
-
-smtp.on('rcptFailed', function(addresses){
-  console.log('Failed Addresses:', addresses);
-});
-
-
 smtp.on('validateRecipient', function(connection, email, done){
-  console.log('validateRecipient');
   email = email.split("@");
   var partyline = {};
-      partyline.name = email.pop().toLowerCase().trim();
-      partyline.host = email.slice(-1)[0].toLowerCase().trim();
-
-  console.log(email);
-  console.log(partyline);
-  console.log(partyline.name);
-  console.log(partylines[partyline.name]);
-  console.log((partylines[partyline.name]));
+      partyline.name = email.slice(-1)[0].toLowerCase().trim();
+      partyline.host = email.pop().toLowerCase().trim();
 
   if (partylines[partyline.name]) {
     partyline.recipients = partylines[partyline.name];
