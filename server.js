@@ -24,6 +24,18 @@ var smtp = simplesmtp.createServer({
 });
 smtp.listen(25);
 
+/*
+
+Validate Recipient -- and sender
+Pipe all data to a .eml file
+On dataReady pipe file to mailparser...
+
+
+
+
+*/
+
+
 smtp.on('validateRecipient', function(connection, email, done){
   console.log('validateRecipient', connection);
   email = email.split("@");
@@ -50,23 +62,15 @@ smtp.on('validateSender', function(connection, email, done){
 smtp.on("startData", function(connection){
   console.log('===================================================');
   console.log('===================================================');
+  connection.emailData = '';
   console.log('startData',connection);
 });
 
 smtp.on("data", function(connection, chunk){
   console.log('Reading Data..',connection);
 
-  mailparser.write(chunk);
-  mailparser.end();
-  mailparser.on('end', function(mail){
-    connection.parsedMail = mail;
-    console.log('parsing mail completed');
-    // console.log("From:",      mail.from); //[{address:'sender@example.com',name:'Sender Name'}]
-    // console.log("Subject:",   mail.subject); // Hello world!
-    // console.log("Text body:", mail.text); // How are you today?
-    // console.log("HTML body:", mail.html); // How are you today?
-  });
-
+  connection.emailData += chunk;
+  
 });
 
 smtp.on('dataReady', function(connection){
@@ -78,46 +82,53 @@ smtp.on('close', function(connection){
   
   console.log('close event...', connection);
 
-  var email;
-  // Loop over all the partyline recipients for this partyline
-  // And send them all individual emails with the from being the partyline email
-  if (connection.partyline && connection.partyline.recipients) {
-    connection.partyline.recipients.forEach(function(recipient){
+  mailparser.write(connection.emailData);
+  mailparser.end();
+  mailparser.on('end', function(mail){
+    connection.parsedMail = mail;
 
-      email = {
-        html: connection.parsedMail.html,
-        text: connection.parsedMail.text,
-        subject: connection.parsedMail.subject,
-        to: recipient,
-        from_name: connection.partyline,
-        from_email: connection.partyline.name + '@partyline.cc',
-        headers: {
-          'Reply-To': connection.partyline.name + '@partyline.cc'
+    var email;
+    // Loop over all the partyline recipients for this partyline
+    // And send them all individual emails with the from being the partyline email
+    if (connection.partyline && connection.partyline.recipients) {
+      connection.partyline.recipients.forEach(function(recipient){
+
+        email = {
+          html: connection.parsedMail.html,
+          text: connection.parsedMail.text,
+          subject: connection.parsedMail.subject,
+          to: recipient,
+          from_name: connection.partyline,
+          from_email: connection.partyline.name + '@partyline.cc',
+          headers: {
+            'Reply-To': connection.partyline.name + '@partyline.cc'
+          }
+        };
+
+        if (connection.parsedMail.attachments && connection.parsedMail.attachments.length > 0) {
+          email.attachments = [];
+          for (var i = connection.parsedMail.attachments.length - 1; i >= 0; i--) {
+            email.attachments.push({
+              type: connection.parsedMail.attachments[i].contentType,
+              name: connection.parsedMail.attachments[i].fileName,
+              content: connection.parsedMail.attachments[i].content
+            });
+          }
         }
-      };
 
-      if (connection.parsedMail.attachments && connection.parsedMail.attachments.length > 0) {
-        email.attachments = [];
-        for (var i = connection.parsedMail.attachments.length - 1; i >= 0; i--) {
-          email.attachments.push({
-            type: connection.parsedMail.attachments[i].contentType,
-            name: connection.parsedMail.attachments[i].fileName,
-            content: connection.parsedMail.attachments[i].content
-          });
-        }
-      }
+        console.log('Email:', email);
 
-      console.log('Email:', email);
+        // mandrill_client.messages.send({
+        //   message: email,
+        //   async: true
+        // }, function(result){
+        //   console.log('Sent Result:', result);
+        // });
 
-      // mandrill_client.messages.send({
-      //   message: email,
-      //   async: true
-      // }, function(result){
-      //   console.log('Sent Result:', result);
-      // });
+      });
+    }
 
-    });
-  }
+  });
 
 });
 
