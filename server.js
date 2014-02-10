@@ -58,8 +58,8 @@ smtp.on('startData', function(connection){
     
     // store.push(object);
 
-    logger.log('Saving email: ', mailObject.subject);
-    logger.log('Connection Object: ', connection);
+    console.log('Saving email: ', mailObject.subject);
+    console.log('Connection Object: ', connection);
 
     // eventEmitter.emit('new');
   });
