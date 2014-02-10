@@ -25,6 +25,7 @@ var smtp = simplesmtp.createServer({
 smtp.listen(25);
 
 smtp.on('validateRecipient', function(connection, email, done){
+  console.log('validateRecipient');
   email = email.split("@");
   var partyline = {};
       partyline.name = email[0].toLowerCase().trim();
@@ -41,17 +42,17 @@ smtp.on('validateRecipient', function(connection, email, done){
 
 
 smtp.on('validateSender', function(connection, email, done){
-  // console.log('validateSender');
+  console.log('validateSender');
   return done();
 });
 
 
 smtp.on("startData", function(connection){
-  // process.stdout.write("\r\nNew Mail:\r\n");
+  process.stdout.write("\r\nReading New Mail...\r\n");
 });
 
 smtp.on("data", function(connection, chunk){
-
+  console.log('Reading Data..');
   mailparser.write(chunk);
   mailparser.end();
   mailparser.on('end', function(mail){
