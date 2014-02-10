@@ -37,6 +37,10 @@ smtp.on('validateRecipient', function(connection, email, done){
       partyline.name = email.pop().toLowerCase().trim();
       partyline.host = email.slice(-1)[0].toLowerCase().trim();
 
+  console.log(partyline.name);
+  console.log(partylines[partyline.name]);
+  console.log((partylines[partyline.name]));
+
   if (partylines[partyline.name]) {
     partyline.recipients = partylines[partyline.name];
     connection.partyline = partyline;
