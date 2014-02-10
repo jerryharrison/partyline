@@ -15,17 +15,7 @@ var smtp = simplesmtp.createServer({
 smtp.listen(25);
 
 // Faux partyline data.
-var partylines = {
-  bni: [
-    {email: 'fivesecondrule@gmail.com', name: 'Jerry Harrison', type: 'to'},
-    {email: 'jerry@lunadesk.com', name: 'Jerry Luna', type: 'to'},
-    {email: 'harrison@grandstrandlawyers.com', name: 'Angela Harrison', type: 'to'}
-  ],
-  test: [
-    {email: 'fivesecondrule@gmail.com', name: 'Jerry Harrison', type: 'to'},
-    {email: 'jerry@lunadesk.com', name: 'Jerry Luna', type: 'to'}
-  ]
-};
+var partylines = require('./partylines');
 
 smtp.on('validateSender', function(connection, email, done){
   console.log('validateSender');
