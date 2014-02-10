@@ -60,7 +60,7 @@ smtp.on('startData', function(connection){
 
   connection.saveStream.on('end', function (mailObject){
 
-    console.log('Parsed Email: ', mailObject.subject);
+    console.log('Parsed Email: ', mailObject);
     console.log('Partylines Object: ', connection.partyline);
 
     var email = {
