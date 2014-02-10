@@ -60,21 +60,25 @@ smtp.on('validateSender', function(connection, email, done){
 
 
 smtp.on("startData", function(connection){
+  console.log('startData');
   console.log('===================================================');
+  console.log('begin');
   console.log('===================================================');
   connection.emailData = '';
-  console.log('startData',connection);
 });
 
 smtp.on("data", function(connection, chunk){
-  console.log('Reading Data..',connection);
+  console.log('Reading Data..');
 
   connection.emailData += chunk;
 
 });
 
 smtp.on('dataReady', function(connection, done){
-  console.log('dataReady',connection);
+  console.log('dataReady');
+  console.log('===================================================');
+  console.log('End');
+  console.log('===================================================');
   return done();
 });
 
