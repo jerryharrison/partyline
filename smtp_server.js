@@ -18,8 +18,8 @@ smtp.listen(25);
 var partylines = {
   bni: [
     {email: 'fivesecondrule@gmail.com', name: 'Jerry Harrison', type: 'to'},
-    {email: 'jerry@lunadesk.com', name: 'Jerry Luna', type: 'to'}
-    // {email: 'harrison@grandstrandlawyers.com', name: 'Angela Harrison', type: 'to'}
+    {email: 'jerry@lunadesk.com', name: 'Jerry Luna', type: 'to'},
+    {email: 'harrison@grandstrandlawyers.com', name: 'Angela Harrison', type: 'to'}
   ]
 };
 
@@ -99,7 +99,7 @@ smtp.on('startData', function(connection){
             message: email,
             async: true
           }, function(result){
-            console.log('Sent Result:', result.email, result.status);
+            console.log('Sent Result:', result);
           });
 
         };
