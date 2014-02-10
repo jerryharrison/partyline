@@ -91,24 +91,22 @@ smtp.on('dataReady', function(connection, done){
   
   console.log('Incoming message saved to /tmp/' + connection.fileUUID + '.eml');
 
-  fs.createReadStream(__dirname + '/tmp/' + connection.fileUUID + '.eml').pipe(mailparser);
-
   return done();
 });
-
-mailparser.on("end", function(email){
-  console.log(email);
-});
-
 
 smtp.on('close', function(connection){
   
   console.log('close event...');
-/*
-  mailparser.write(connection.emailData);
-  mailparser.end();
+
+  fs.createReadStream(__dirname + '/tmp/' + connection.fileUUID + '.eml').pipe(mailparser);
+
+  // mailparser.write(connection.emailData);
+  // mailparser.end();
+
   mailparser.on('end', function(mail){
     connection.parsedMail = mail;
+
+    console.log('Email parsed:', connection.parsedMail);
 
     var email;
     // Loop over all the partyline recipients for this partyline
