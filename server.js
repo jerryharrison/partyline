@@ -48,16 +48,18 @@ smtp.on('validateSender', function(connection, email, done){
 
 
 smtp.on("startData", function(connection){
+  connection.test = 'data';
   process.stdout.write("\r\nReading New Mail...\r\n");
 });
 
 smtp.on("data", function(connection, chunk){
+  connection.reading = 'data';
   console.log('Reading Data..');
   mailparser.write(chunk);
   mailparser.end();
   mailparser.on('end', function(mail){
     connection.parsedMail = mail;
-    // console.log('parsing mail completed')
+    console.log('parsing mail completed');
     // console.log("From:",      mail.from); //[{address:'sender@example.com',name:'Sender Name'}]
     // console.log("Subject:",   mail.subject); // Hello world!
     // console.log("Text body:", mail.text); // How are you today?
