@@ -20,7 +20,7 @@ var smtp = simplesmtp.createServer({
   name: 'partyline.cc',
   validateRecipients : false,
   disableDNSValidation: true,
-  debug: true
+  debug: false
 });
 smtp.listen(25);
 
@@ -41,7 +41,7 @@ smtp.on('validateRecipient', function(connection, email, done){
 
 
 smtp.on('validateSender', function(connection, email, done){
-  console.log('validateSender');
+  // console.log('validateSender');
   return done();
 });
 
@@ -56,7 +56,7 @@ smtp.on("data", function(connection, chunk){
   mailparser.end();
   mailparser.on('end', function(mail){
     connection.parsedMail = mail;
-    console.log('parsing mail completed')
+    // console.log('parsing mail completed')
     // console.log("From:",      mail.from); //[{address:'sender@example.com',name:'Sender Name'}]
     // console.log("Subject:",   mail.subject); // Hello world!
     // console.log("Text body:", mail.text); // How are you today?
@@ -65,7 +65,7 @@ smtp.on("data", function(connection, chunk){
 
 });
 
-smtp.on('message', function(connection){
+smtp.on('close', function(connection){
   
   console.log('message event...')
   console.log(connection);
