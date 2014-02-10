@@ -22,13 +22,21 @@ var smtp = simplesmtp.createServer({
   disableDNSValidation: true,
   debug: true
 });
-    smtp.listen(25);
+smtp.listen(25);
+
 
 smtp.on('validateRecipient', function(connection, email, done){
+  console.log('validateRecipient');
   email = email.split("@");
   var partyline = {};
       partyline.name = email.slice(-1)[0].toLowerCase().trim();
       partyline.host = email.pop().toLowerCase().trim();
+
+  console.log(email);
+  console.log(partyline);
+  console.log(partyline.name);
+  console.log(partylines[partyline.name]);
+  console.log((partylines[partyline.name]));
 
   if (partylines[partyline.name]) {
     partyline.recipients = partylines[partyline.name];
