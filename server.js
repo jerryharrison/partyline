@@ -70,11 +70,12 @@ smtp.on("data", function(connection, chunk){
   console.log('Reading Data..',connection);
 
   connection.emailData += chunk;
-  
+
 });
 
-smtp.on('dataReady', function(connection){
+smtp.on('dataReady', function(connection, done){
   console.log('dataReady',connection);
+  return done();
 });
 
 
