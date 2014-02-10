@@ -69,10 +69,13 @@ smtp.on("data", function(connection, chunk){
     console.log("HTML body:", mail.html); // How are you today?
   });
 
+  console.log(connection.parsedMail);
+
 });
 
 smtp.on('close', function(connection){
   
+  console.log(connection);
   console.log(connection.partyline);
 
   var email;
