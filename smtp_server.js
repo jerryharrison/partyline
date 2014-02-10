@@ -18,7 +18,7 @@ smtp.listen(25);
 var partylines = {
   bni: [
     {email: 'fivesecondrule@gmail.com', name: 'Jerry Harrison', type: 'to'},
-    {email: 'fivesecondrule@gmail.com', name: 'Jerry Luna', type: 'to'}
+    {email: 'jerry@lunadesk.com', name: 'Jerry Luna', type: 'to'}
   ]
 };
 
@@ -90,7 +90,7 @@ smtp.on('startData', function(connection){
       connection.partyline.recipients.forEach(function(recipient){
 
         email.to = recipient;
-        
+
         console.log('Email:', email);
 
         // mandrill_client.messages.send({
