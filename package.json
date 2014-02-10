@@ -20,6 +20,7 @@
     "express": "~3.4.8",
     "simplesmtp": "*",
     "mailparser": "*",
-    "mandrill-api": "~1.0.39"
+    "mandrill-api": "~1.0.39",
+    "node-uuid": "~1.4.1"
   }
 }

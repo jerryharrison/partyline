@@ -1,9 +1,21 @@
 
 // var express = require('express');
 var config = require("./config.json");
+var fs = require("fs");
+var uuid = require("node-uuid");
 var simplesmtp = require("simplesmtp");
 var MailParser = require("mailparser").MailParser,
-    mailparser = new MailParser();
+    mailparser = new MailParser({
+        streamAttachments : true
+    });
+
+mailparser.on("attachment", function(attachment){
+  if(attachment && attachment.fileName && /(.GIF|.JPEG|.JPG|.PNG)$/.test(attachment.fileName.toUpperCase())){
+    picPath = "/tmp/weibo_" + attachment.generatedFileName;
+    attachment.stream.pipe(fs.createWriteStream(picPath));
+  }
+});
+
 
 var mandrill = require('mandrill-api/mandrill');
 var mandrill_client = new mandrill.Mandrill(config.mandrill);
@@ -59,31 +71,43 @@ smtp.on('validateSender', function(connection, email, done){
 
 
 smtp.on("startData", function(connection){
-  console.log('startData');
-  console.log('===================================================');
-  console.log('begin');
-  console.log('===================================================');
-  connection.emailData = '';
+
+  console.log("Message from:", connection.from);
+  console.log("Message to:", connection.to);
+
+  connection.fileUUID = uuid.v4();
+
+  if (fs.existsSync('/tmp')) {
+    fs.mkdirSync('/tmp');
+    connection.saveStream = fs.createWriteStream('/tmp/' + connection.fileUUID + '.eml');
+  }
+
 });
 
 smtp.on("data", function(connection, chunk){
-  console.log('Reading Data..');
-  connection.emailData += chunk;
+  console.log('Writing Data...');
+  connection.saveStream.write(chunk);
 });
 
 smtp.on('dataReady', function(connection, done){
-  console.log('dataReady');
-  console.log('===================================================');
-  console.log('End');
-  console.log('===================================================');
+  connection.saveStream.end();
+  
+  console.log('Incoming message saved to /tmp/' + connection.fileUUID + '.eml');
+
+  fs.createReadStream('/tmp/' + connection.fileUUID + '.eml').pipe(mailparser);
+
   return done();
+});
+
+mailparser.on("end", function(email){
+  console.log(email);
 });
 
 
 smtp.on('close', function(connection){
   
   console.log('close event...');
-
+/*
   mailparser.write(connection.emailData);
   mailparser.end();
   mailparser.on('end', function(mail){
@@ -131,6 +155,7 @@ smtp.on('close', function(connection){
     }
 
   });
+*/
 
 });
 
