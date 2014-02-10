@@ -29,7 +29,7 @@ smtp.on('validateRecipient', function(connection, email, done){
   console.log('validateRecipient');
   email = email.split("@");
   var partyline = {};
-      partyline.name = email.slice(-1)[0].toLowerCase().trim();
+      partyline.name = email[0].toLowerCase().trim();
       partyline.host = email.pop().toLowerCase().trim();
 
   console.log(email);
