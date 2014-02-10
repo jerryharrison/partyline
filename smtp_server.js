@@ -20,6 +20,10 @@ var partylines = {
     {email: 'fivesecondrule@gmail.com', name: 'Jerry Harrison', type: 'to'},
     {email: 'jerry@lunadesk.com', name: 'Jerry Luna', type: 'to'},
     {email: 'harrison@grandstrandlawyers.com', name: 'Angela Harrison', type: 'to'}
+  ],
+  test: [
+    {email: 'fivesecondrule@gmail.com', name: 'Jerry Harrison', type: 'to'},
+    {email: 'jerry@lunadesk.com', name: 'Jerry Luna', type: 'to'}
   ]
 };
 
@@ -61,7 +65,7 @@ smtp.on('startData', function(connection){
 
     var email = {
       subject: mailObject.subject,
-      from_name: connection.partyline.name,
+      from_name: mailObject.from.name + ' | ' + connection.partyline.name + ' Partyline',
       from_email: connection.partyline.name + '@partyline.cc',
       headers: {
         'Reply-To': connection.partyline.name + '@partyline.cc'
@@ -120,6 +124,6 @@ smtp.on('dataReady', function(connection, done){
   connection.saveStream.end();
   // ABC123 is the queue id to be advertised to the client
   // There is no current significance to this.
-  done(null, 'ABC123');
+  return done(null, 'ABC123');
 });
 
