@@ -5,17 +5,7 @@ var fs = require("fs");
 var uuid = require("node-uuid");
 var simplesmtp = require("simplesmtp");
 var MailParser = require("mailparser").MailParser;
-var mailparser = new MailParser({
-        streamAttachments : true
-    });
-
-mailparser.on("attachment", function(attachment){
-  if(attachment && attachment.fileName && /(.GIF|.JPEG|.JPG|.PNG)$/.test(attachment.fileName.toUpperCase())){
-    picPath = "/tmp/weibo_" + attachment.generatedFileName;
-    attachment.stream.pipe(fs.createWriteStream(picPath));
-  }
-});
-
+var mailparser = new MailParser();
 
 var mandrill = require('mandrill-api/mandrill');
 var mandrill_client = new mandrill.Mandrill(config.mandrill);
