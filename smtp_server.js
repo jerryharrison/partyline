@@ -60,12 +60,12 @@ smtp.on('startData', function(connection){
 
   connection.saveStream.on('end', function (mailObject){
 
-    console.log('Parsed Email: ', mailObject);
+    // console.log('Parsed Email: ', mailObject);
     console.log('Partylines Object: ', connection.partyline);
 
     var email = {
       subject: mailObject.subject,
-      from_name: mailObject.from.name + ' | ' + connection.partyline.name + ' Partyline',
+      from_name: mailObject.from[0].name + ' | ' + connection.partyline.name + ' Partyline',
       from_email: connection.partyline.name + '@partyline.cc',
       headers: {
         'Reply-To': connection.partyline.name + '@partyline.cc'
