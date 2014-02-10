@@ -77,10 +77,7 @@ smtp.on("startData", function(connection){
 
   connection.fileUUID = uuid.v4();
 
-  if (fs.existsSync(__dirname + '/tmp')) {
-    fs.mkdirSync('/tmp');
-    connection.saveStream = fs.createWriteStream(__dirname + '/tmp/' + connection.fileUUID + '.eml');
-  }
+  connection.saveStream = fs.createWriteStream(__dirname + '/tmp/' + connection.fileUUID + '.eml');
 
 });
 
