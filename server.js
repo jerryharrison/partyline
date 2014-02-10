@@ -24,19 +24,11 @@ var smtp = simplesmtp.createServer({
 });
 smtp.listen(25);
 
-
 smtp.on('validateRecipient', function(connection, email, done){
-  console.log('validateRecipient');
   email = email.split("@");
   var partyline = {};
       partyline.name = email[0].toLowerCase().trim();
       partyline.host = email.pop().toLowerCase().trim();
-
-  console.log(email);
-  console.log(partyline);
-  console.log(partyline.name);
-  console.log(partylines[partyline.name]);
-  console.log((partylines[partyline.name]));
 
   if (partylines[partyline.name]) {
     partyline.recipients = partylines[partyline.name];
@@ -55,7 +47,7 @@ smtp.on('validateSender', function(connection, email, done){
 
 
 smtp.on("startData", function(connection){
-  process.stdout.write("\r\nNew Mail:\r\n");
+  // process.stdout.write("\r\nNew Mail:\r\n");
 });
 
 smtp.on("data", function(connection, chunk){
@@ -64,20 +56,18 @@ smtp.on("data", function(connection, chunk){
   mailparser.end();
   mailparser.on('end', function(mail){
     connection.parsedMail = mail;
-    console.log("From:",      mail.from); //[{address:'sender@example.com',name:'Sender Name'}]
-    console.log("Subject:",   mail.subject); // Hello world!
-    console.log("Text body:", mail.text); // How are you today?
-    console.log("HTML body:", mail.html); // How are you today?
+    console.log('parsing mail completed')
+    // console.log("From:",      mail.from); //[{address:'sender@example.com',name:'Sender Name'}]
+    // console.log("Subject:",   mail.subject); // Hello world!
+    // console.log("Text body:", mail.text); // How are you today?
+    // console.log("HTML body:", mail.html); // How are you today?
   });
-
-  console.log(connection);
-  console.log(chunk);
-  console.log(connection.parsedMail);
 
 });
 
 smtp.on('message', function(connection){
   
+  console.log('message event...')
   console.log(connection);
   console.log(connection.partyline);
 
