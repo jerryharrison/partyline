@@ -28,7 +28,7 @@ var smtp = simplesmtp.createServer({
     name: 'partyline.cc',
     validateRecipients : true,
     disableDNSValidation: true,
-    debug: true
+    debug: false
 });
     smtp.listen(25);
 
@@ -62,7 +62,7 @@ smtp.on("data", function(connection, chunk){
   mailparser.write(chunk);
   mailparser.end();
   mailparser.on('end', function(mail){
-    connection.mail = mail;
+    connection.parsedMail = mail;
     console.log("From:",      mail.from); //[{address:'sender@example.com',name:'Sender Name'}]
     console.log("Subject:",   mail.subject); // Hello world!
     console.log("Text body:", mail.text); // How are you today?
@@ -78,27 +78,27 @@ smtp.on('close', function(connection){
   var email;
   // Loop over all the partyline recipients for this partyline
   // And send them all individual emails with the from being the partyline email
-  connection.partyline.ecipients.forEach(function(recipient){
+  connection.partyline.recipients.forEach(function(recipient){
 
     email = {
-      html: connection.mail.html,
-      text: connection.mail.text,
-      subject: connection.mail.subject,
+      html: connection.parsedMail.html,
+      text: connection.parsedMail.text,
+      subject: connection.parsedMail.subject,
       to: recipient,
       from_name: connection.partyline,
-      from_email: connection.partyline + '@partyline.cc',
+      from_email: connection.partyline.name + '@partyline.cc',
       headers: {
-          'Reply-To': connection.partyline + '@partyline.cc'
+        'Reply-To': connection.partyline.name + '@partyline.cc'
       }
     };
 
-    if (connection.mail.attachments && connection.mail.attachments.length > 0) {
+    if (connection.parsedMail.attachments && connection.parsedMail.attachments.length > 0) {
       email.attachments = [];
-      for (var i = connection.mail.attachments.length - 1; i >= 0; i--) {
+      for (var i = connection.parsedMail.attachments.length - 1; i >= 0; i--) {
         email.attachments.push({
-          type: connection.mail.attachments[i].contentType,
-          name: connection.mail.attachments[i].fileName,
-          content: connection.mail.attachments[i].content
+          type: connection.parsedMail.attachments[i].contentType,
+          name: connection.parsedMail.attachments[i].fileName,
+          content: connection.parsedMail.attachments[i].content
         });
       }
     }
