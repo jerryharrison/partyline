@@ -48,13 +48,14 @@ smtp.on('validateSender', function(connection, email, done){
 
 
 smtp.on("startData", function(connection){
+  console.log('===================================================');
+  console.log('===================================================');
   console.log('startData',connection);
-  process.stdout.write("\r\nReading New Mail...\r\n");
 });
 
 smtp.on("data", function(connection, chunk){
   console.log('Reading Data..',connection);
-  
+
   mailparser.write(chunk);
   mailparser.end();
   mailparser.on('end', function(mail){
@@ -80,7 +81,7 @@ smtp.on('close', function(connection){
   var email;
   // Loop over all the partyline recipients for this partyline
   // And send them all individual emails with the from being the partyline email
-  if (connection.partyline.recipients) {
+  if (connection.partyline && connection.partyline.recipients) {
     connection.partyline.recipients.forEach(function(recipient){
 
       email = {
