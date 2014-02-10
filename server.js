@@ -73,10 +73,12 @@ smtp.on("data", function(connection, chunk){
 
 smtp.on('close', function(connection){
   
+  console.log(connection.partyline);
+
   var email;
   // Loop over all the partyline recipients for this partyline
   // And send them all individual emails with the from being the partyline email
-  connection.partylineRecipients.forEach(function(recipient){
+  connection.partyline.ecipients.forEach(function(recipient){
 
     email = {
       html: connection.mail.html,
