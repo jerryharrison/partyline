@@ -18,8 +18,8 @@ smtp.listen(25);
 var partylines = {
   bni: [
     {email: 'fivesecondrule@gmail.com', name: 'Jerry Harrison', type: 'to'},
-    {email: 'jerry@lunadesk.com', name: 'Jerry Luna', type: 'to'},
-    {email: 'harrison@grandstrandlawyers.com', name: 'Angela Harrison', type: 'to'}
+    {email: 'jerry@lunadesk.com', name: 'Jerry Luna', type: 'to'}
+    // {email: 'harrison@grandstrandlawyers.com', name: 'Angela Harrison', type: 'to'}
   ]
 };
 
@@ -85,17 +85,33 @@ smtp.on('startData', function(connection){
       }
     }
 
+    // Loop over all the partyline recipients for this partyline
+    // And send them all individual emails with the from being the partyline email
     if (connection.partyline && connection.partyline.recipients) {
 
-      email.to = connection.partyline.recipients;
+      // email.to = connection.partyline.recipients;
 
-      mandrill_client.messages.send({
-        message: email,
-        async: true
-      }, function(result){
-        console.log('Sent Result:', result);
+      // mandrill_client.messages.send({
+      //   message: email,
+      //   async: true
+      // }, function(result){
+      //   console.log('Sent Result:', result);
+      // });
+
+      connection.partyline.recipients.forEach(function(recipient){
+
+        email.to = [recipient];
+
+        console.log('Sending to:', recipient.name);
+
+        mandrill_client.messages.send({
+          message: email,
+          async: true
+        }, function(result){
+          console.log('Sent Result:', result);
+        });
+
       });
-
     }
 
   });
