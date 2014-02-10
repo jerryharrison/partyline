@@ -32,18 +32,15 @@ var smtp = simplesmtp.createServer({
 });
     smtp.listen(25);
 
-smtp.on('validateRecipient', function(envelope, email, done){
+smtp.on('validateRecipient', function(connection, email, done){
   email = (email || "").split("@");
   var partyline = {};
       partyline.name = email.pop().toLowerCase().trim();
       partyline.host = email.slice(-1)[0].toLowerCase().trim();
 
-  console.log('Partyline:', partyline);
-  console.log('Partylines:', partylines);
-
-  if (partylines[partyline]) {
-    envelope.partyline = partyline;
-    envelope.partylineRecipients = partylines[partyline];
+  if (partylines[partyline.name]) {
+    partyline.recipients = partylines[partyline.name];
+    connection.partyline = partyline;
     return done();
   } else {
     return done(new Error("Invalid Partyline"));
@@ -54,6 +51,7 @@ smtp.on('validateRecipient', function(envelope, email, done){
 smtp.on('validateSender', function(connection, email, done){
   return done();
 });
+*/
 
 smtp.on("startData", function(connection){
   process.stdout.write("\r\nNew Mail:\r\n");
@@ -73,7 +71,7 @@ smtp.on("data", function(connection, chunk){
 
 });
 
-smtp.on('end', function(connection){
+smtp.on('close', function(connection){
   
   var email;
   // Loop over all the partyline recipients for this partyline
